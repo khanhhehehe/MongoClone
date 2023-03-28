@@ -14,32 +14,46 @@ app.get('/', async (req, res) => {
     await mongoose.connect(uri).then(console.log("ket noi db thanh cong"))
     try {
         const labs = await labModel.find()
+        console.log(labs.toString());
+        res.send(labs)
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+app.get('/add', async (req, res) => {
+    await mongoose.connect(uri).then(console.log("ket noi db thanh cong"))
+    let lab = new labModel({
+        tieude: 'lab clone 5',
+        noidung: 'bai tap moi',
+        tailieu: 5
+    })
+    try {
+        let kq = await lab.save()
+        console.log(kq);
+        let labs = await labModel.find()
+        res.send(labs)
+    } catch (error) {
+
+    }
+})
+app.get('/delete', async (req, res) => {
+    await mongoose.connect(uri).then(console.log("ket noi db thanh cong"))
+    try {
+        labModel.collection.deleteOne({tailieu: 5})
+        const labs = await labModel.find()
         console.log(labs);
         res.send(labs)
     } catch (error) {
         console.log(error);
     }
-    // let lab = new labModel({
-    //     tieude: 'lab clone',
-    //     noidung:'bai tap viet API 2'
-    // })
-    // lab.tailieu = 3
-
-    // try {
-    //     let kq = await lab.save()
-    //     console.log(kq);
-    //     let labs = await labModel.find()
-    //     res.send(labs)
-    // } catch (error) {
-
-    // }
 })
-
-app.get('/delete', async (req, res) => {
+app.get('/update',async (req,res)=>{
     await mongoose.connect(uri).then(console.log("ket noi db thanh cong"))
     try {
+        labModel.collection.updateOne({tailieu: 5},{ $set: {tailieu: 7} })
         const labs = await labModel.find()
-        labModel.deleteOne({ tailieu: 4 })
+        console.log(labs);
         res.send(labs)
     } catch (error) {
         console.log(error);
