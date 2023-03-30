@@ -1,4 +1,4 @@
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+<button type="button" class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
     Thêm nhân viên
 </button>
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -26,32 +26,34 @@
         </div>
     </div>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">STT</th>
-            <th scope="col">Tên</th>
-            <th scope="col">Địa chỉ</th>
-            <th scope="col">Lương</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each dataNV}}
-        <tr>
-            <th scope="row">{{@index}}</th>
-            <td>{{ten}}</td>
-            <td>{{diachi}}</td>
-            <td>{{luong}}</td>
-            <td>
-                <form method="get" action="upNV">
-                    <button name="idEdit" value={{_id}} class="btn btn-primary" type="submit">Sửa</button>
-                </form>
-                <form method="get" action="deleteNV">
-                    <button name="idNV" value={{_id}} class="btn btn-primary" type="submit">Xóa</button>
-                </form>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<div class="p-3">
+    <table class="table table-light">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">STT</th>
+                <th scope="col">Tên</th>
+                <th scope="col">Địa chỉ</th>
+                <th scope="col">Lương</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each dataNV}}
+            <tr>
+                <th class="col-1" scope="row">{{@index}}</th>
+                <td>{{ten}}</td>
+                <td>{{diachi}}</td>
+                <td>{{luong}}</td>
+                <td class="col-1">
+                    <form method="get" action="upNV">
+                        <button name="idEdit" value={{_id}} class="btn btn-primary mb-2" type="submit">Sửa</button>
+                    </form>
+                    <form method="get" action="deleteNV">
+                        <button name="idNV" value={{_id}} class="btn btn-primary" type="submit">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
