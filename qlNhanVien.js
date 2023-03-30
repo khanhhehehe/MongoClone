@@ -61,7 +61,7 @@ app.get('/upNV', async (req, res) => {
         console.log(error);
     }
 })
-app.post('/upNV/update', async (req, res) => {
+app.get('/upNV/update', async (req, res) => {
     let name = req.query.nameNV
     let address = req.query.addressNV
     let salary = parseInt(req.query.salaryNV)
