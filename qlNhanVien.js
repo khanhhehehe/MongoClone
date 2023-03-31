@@ -4,37 +4,37 @@ const uri = require('./mylocalNhanVien')
 const expressHbs = require('express-handlebars')
 const nhanvienModel = require('./NhanVienModel')
 const mongodb = require('mongodb')
+const bodyParser = require('body-parser')
 const app = express()
 app.engine('.hbs', expressHbs.engine({
     extname: "hbs",
     defaultLayout: 'main',
     layoutsDir: "views/layouts/"
 }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', '.hbs')
 app.get('/', async (req, res) => {
+    let chk = req.query.chkadd
     try {
         await mongoose.connect(uri)
         const listNV = await nhanvienModel.find().lean()
-        res.render('pagelistNV', { dataNV: listNV })
+        res.render('pagelistNV', { dataNV: listNV, chkadd: chk })
     } catch (error) {
         console.log(error);
     }
 
 })
-app.get('/addNV', async (req, res) => {
-    let name = req.query.nameNV
-    let address = req.query.addressNV
-    let salary = parseInt(req.query.salaryNV)
+app.post('/addNV', async (req, res) => {
+    let rs = req.body
     let nv = new nhanvienModel({
-        ten: name,
-        diachi: address,
-        luong: salary
+        ten: rs.nameNV,
+        diachi: rs.addressNV,
+        luong: parseInt(rs.salaryNV)
 
     })
-    console.log(req.body);
     try {
         await nv.save()
-        res.redirect('/')
+        res.redirect('/?chkadd=true')
     } catch (error) {
 
     }
@@ -49,29 +49,13 @@ app.get('/deleteNV', async (req, res) => {
     }
     console.log(idNV);
 })
-app.get('/upNV', async (req, res) => {
-    let idUp = req.query.idEdit
-    // // let nvNew = await nhanvienModel.find({_id: new mongodb.ObjectId(`${idUp}`)})
-    console.log(idUp);
+app.post('/upNV', async (req, res) => {
+    let rs = req.body
     try {
-        const listNV = await nhanvienModel.find().lean()
-        let nvUp = await nhanvienModel.find({ _id: new mongodb.ObjectId(`${idUp}`) }).lean()
-        res.render('pageUpdate', { dataNV: listNV, nv: nvUp[0], index: idUp })
+        await nhanvienModel.collection.updateOne({ _id: new mongodb.ObjectId(`${rs.idEdit}`) }, { $set: { ten: rs.nameNV, diachi: rs.addressNV, luong: parseInt(rs.salaryNV) } })
+        res.redirect('/')
     } catch (error) {
         console.log(error);
-    }
-})
-app.get('/upNV/update', async (req, res) => {
-    let name = req.query.nameNV
-    let address = req.query.addressNV
-    let salary = parseInt(req.query.salaryNV)
-    let idNV = req.query.idNVien
-    try {
-        await mongoose.connect(uri)
-        await nhanvienModel.collection.updateOne({ _id: new mongodb.ObjectId(`${idNV}`)}, { $set: { ten: name, diachi:address, luong: salary } })
-        res.redirect('/')        
-    } catch (error) {
-        
     }
 })
 app.listen(3000, (req, res) => {
